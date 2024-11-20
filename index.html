@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fitness Game</title>
+  <title>Fitness Trainer Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,22 +20,43 @@
     <!-- Sezione Scheda -->
     <section id="plan-section">
       <h2>Crea una Scheda</h2>
-      <form id="exercise-form">
+
+      <!-- Cardio -->
+      <h3>Cardio</h3>
+      <form id="cardio-form">
+        <label for="cardio">Seleziona attività:</label>
+        <select id="cardio">
+          <option value="Tapis Roulant">Tapis Roulant</option>
+          <option value="Cyclette">Cyclette</option>
+          <option value="Salto con la corda">Salto con la corda</option>
+        </select>
+        <label for="cardio-time">Minuti:</label>
+        <input type="number" id="cardio-time" placeholder="Minuti">
+        <button type="button" id="add-cardio">Aggiungi Cardio</button>
+      </form>
+
+      <!-- Ipertrofia -->
+      <h3>Ipertrofia</h3>
+      <form id="hypertrophy-form">
         <label for="exercise">Esercizio:</label>
         <input type="text" id="exercise" placeholder="Nome esercizio">
-        
         <label for="sets">Serie:</label>
         <input type="number" id="sets" placeholder="Numero di serie">
-
         <label for="reps">Ripetizioni:</label>
         <input type="number" id="reps" placeholder="Numero di ripetizioni">
-
-        <label for="load">Carico:</label>
-        <input type="text" id="load" placeholder="Peso o intensità">
-
-        <button type="button" id="add-exercise">Aggiungi Esercizio</button>
+        <button type="button" id="add-exercise">Aggiungi Ipertrofia</button>
       </form>
-      
+
+      <!-- Stretching -->
+      <h3>Stretching</h3>
+      <form id="stretching-form">
+        <label for="stretching-exercise">Esercizio:</label>
+        <input type="text" id="stretching-exercise" placeholder="Nome esercizio">
+        <label for="stretching-time">Durata (minuti):</label>
+        <input type="number" id="stretching-time" placeholder="Durata">
+        <button type="button" id="add-stretching">Aggiungi Stretching</button>
+      </form>
+
       <h3>Esercizi:</h3>
       <ul id="exercise-list"></ul>
 
