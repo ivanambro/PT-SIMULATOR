@@ -1,79 +1,93 @@
-// Funzione per generare clienti virtuali
+// Profili clienti simulati
+const clientProfiles = [
+  {
+    age: 25,
+    sex: "Maschio",
+    weight: 70,
+    height: 175,
+    goal: "Ipertrofia",
+    constraints: "Solo manubri",
+    time: "3 giorni/settimana, 1 ora per sessione",
+  },
+  {
+    age: 30,
+    sex: "Femmina",
+    weight: 65,
+    height: 165,
+    goal: "Dimagrimento",
+    constraints: "No salti, problemi al ginocchio",
+    time: "5 giorni/settimana, 45 minuti",
+  },
+];
+
+// Stato attuale
+let currentClient = null;
+
+// Funzione per generare un cliente
 function generateClient() {
-  const profiles = [
-    {
-      age: 25,
-      sex: "Maschio",
-      weight: 70,
-      height: 175,
-      goal: "Ipertrofia",
-      constraints: "No bilanciere, solo manubri",
-    },
-    {
-      age: 35,
-      sex: "Femmina",
-      weight: 60,
-      height: 165,
-      goal: "Dimagrimento",
-      constraints: "Cardio moderato e resistenza",
-    },
-    {
-      age: 45,
-      sex: "Maschio",
-      weight: 85,
-      height: 180,
-      goal: "Aumento forza",
-      constraints: "Problema alla spalla destra",
-    },
-  ];
-
-  return profiles[Math.floor(Math.random() * profiles.length)];
-}
-
-// Mostra il profilo cliente
-function displayClientProfile() {
-  const profile = generateClient();
-  const profileDiv = document.getElementById("profile");
-
+  currentClient = clientProfiles[Math.floor(Math.random() * clientProfiles.length)];
+  const profileDiv = document.getElementById("client-profile");
   profileDiv.innerHTML = `
-    <p><strong>Età:</strong> ${profile.age}</p>
-    <p><strong>Sesso:</strong> ${profile.sex}</p>
-    <p><strong>Peso:</strong> ${profile.weight} kg</p>
-    <p><strong>Altezza:</strong> ${profile.height} cm</p>
-    <p><strong>Obiettivo:</strong> ${profile.goal}</p>
-    <p><strong>Vincoli:</strong> ${profile.constraints}</p>
+    <p><strong>Età:</strong> ${currentClient.age}</p>
+    <p><strong>Sesso:</strong> ${currentClient.sex}</p>
+    <p><strong>Peso:</strong> ${currentClient.weight} kg</p>
+    <p><strong>Altezza:</strong> ${currentClient.height} cm</p>
+    <p><strong>Obiettivo:</strong> ${currentClient.goal}</p>
+    <p><strong>Vincoli:</strong> ${currentClient.constraints}</p>
+    <p><strong>Tempo:</strong> ${currentClient.time}</p>
   `;
-
-  return profile;
 }
 
-const currentClient = displayClientProfile();
+// Lista esercizi
+let exerciseList = [];
 
-// Aggiungi esercizi alla lista
+// Aggiungi esercizio
 document.getElementById("add-exercise").addEventListener("click", () => {
   const exercise = document.getElementById("exercise").value;
   const sets = document.getElementById("sets").value;
   const reps = document.getElementById("reps").value;
+  const load = document.getElementById("load").value;
 
-  if (exercise && sets && reps) {
-    const exerciseList = document.getElementById("exercise-list");
+  if (exercise && sets && reps && load) {
+    exerciseList.push({ exercise, sets, reps, load });
     const li = document.createElement("li");
-    li.textContent = `${exercise}: ${sets} serie x ${reps} ripetizioni`;
-    exerciseList.appendChild(li);
+    li.textContent = `${exercise}: ${sets} serie x ${reps} ripetizioni (${load})`;
+    document.getElementById("exercise-list").appendChild(li);
 
+    // Resetta i campi
     document.getElementById("exercise").value = "";
     document.getElementById("sets").value = "";
     document.getElementById("reps").value = "";
+    document.getElementById("load").value = "";
   } else {
     alert("Compila tutti i campi!");
   }
 });
 
-// Modifica la funzione di valutazione per visualizzare un messaggio completo
+// Valuta la scheda
 document.getElementById("submit-plan").addEventListener("click", () => {
-  const exerciseList = document.getElementById("exercise-list").innerHTML;
-  const profile = generateClient();
-  
-  // Aggiungi qui il comportamento desiderato
-  alert(`Valutazione Completata! Cliente: ${profile.sex} di ${profile.age} anni.\nObiettivo: ${profile.goal}\nEsercizi Aggiunti: ${exerciseList}`);
+  if (exerciseList.length === 0) {
+    alert("Aggiungi almeno un esercizio!");
+    return;
+  }
+
+  const feedback = document.getElementById("feedback");
+  feedback.innerHTML = `
+    <p>Scheda Valutata per il cliente con obiettivo <strong>${currentClient.goal}</strong>.</p>
+    <p>Hai completato ${exerciseList.length} esercizi. Buon lavoro!</p>
+  `;
+  document.getElementById("plan-section").style.display = "none";
+  document.getElementById("feedback-section").style.display = "block";
 });
+
+// Ricomincia
+document.getElementById("restart-game").addEventListener("click", () => {
+  exerciseList = [];
+  document.getElementById("exercise-list").innerHTML = "";
+  document.getElementById("feedback-section").style.display = "none";
+  document.getElementById("plan-section").style.display = "block";
+  generateClient();
+});
+
+// Inizia il gioco generando il primo cliente
+generateClient();
