@@ -23,7 +23,10 @@ const clientProfiles = [
 // Stato attuale
 let currentClient = null;
 
-// Funzione per generare un cliente
+// Lista esercizi
+let exerciseList = [];
+
+// Genera un nuovo cliente
 function generateClient() {
   currentClient = clientProfiles[Math.floor(Math.random() * clientProfiles.length)];
   const profileDiv = document.getElementById("client-profile");
@@ -38,43 +41,47 @@ function generateClient() {
   `;
 }
 
-// Lista esercizi
-let exerciseList = [];
-
-// Aggiungi esercizio
-document.getElementById("add-exercise").addEventListener("click", () => {
-  const exercise = document.getElementById("exercise").value;
-  const sets = document.getElementById("sets").value;
-  const reps = document.getElementById("reps").value;
-  const load = document.getElementById("load").value;
-
-  if (exercise && sets && reps && load) {
-    exerciseList.push({ exercise, sets, reps, load });
-    const li = document.createElement("li");
-    li.textContent = `${exercise}: ${sets} serie x ${reps} ripetizioni (${load})`;
-    document.getElementById("exercise-list").appendChild(li);
-
-    // Resetta i campi
-    document.getElementById("exercise").value = "";
-    document.getElementById("sets").value = "";
-    document.getElementById("reps").value = "";
-    document.getElementById("load").value = "";
-  } else {
-    alert("Compila tutti i campi!");
+// Aggiungi esercizi
+document.getElementById("add-cardio").addEventListener("click", () => {
+  const cardio = document.getElementById("cardio-select").value;
+  const minutes = document.getElementById("cardio-minutes").value;
+  if (minutes) {
+    exerciseList.push(`Cardio: ${cardio} per ${minutes} minuti`);
+    updateExerciseList();
   }
 });
 
+document.getElementById("add-hypertrophy").addEventListener("click", () => {
+  const name = document.getElementById("exercise-name").value;
+  const sets = document.getElementById("sets").value;
+  const reps = document.getElementById("reps").value;
+  if (name && sets && reps) {
+    exerciseList.push(`Ipertrofia: ${name}, ${sets} serie x ${reps} ripetizioni`);
+    updateExerciseList();
+  }
+});
+
+document.getElementById("add-stretching").addEventListener("click", () => {
+  const name = document.getElementById("stretching-name").value;
+  const minutes = document.getElementById("stretching-minutes").value;
+  if (name && minutes) {
+    exerciseList.push(`Stretching: ${name} per ${minutes} minuti`);
+    updateExerciseList();
+  }
+});
+
+// Aggiorna lista esercizi
+function updateExerciseList() {
+  const list = document.getElementById("exercise-list");
+  list.innerHTML = exerciseList.map(exercise => `<li>${exercise}</li>`).join("");
+}
+
 // Valuta la scheda
 document.getElementById("submit-plan").addEventListener("click", () => {
-  if (exerciseList.length === 0) {
-    alert("Aggiungi almeno un esercizio!");
-    return;
-  }
-
   const feedback = document.getElementById("feedback");
   feedback.innerHTML = `
-    <p>Scheda Valutata per il cliente con obiettivo <strong>${currentClient.goal}</strong>.</p>
-    <p>Hai completato ${exerciseList.length} esercizi. Buon lavoro!</p>
+    <p>Hai creato ${exerciseList.length} esercizi per un cliente con obiettivo ${currentClient.goal}.</p>
+    <p>Ottimo lavoro! Continua così.</p>
   `;
   document.getElementById("plan-section").style.display = "none";
   document.getElementById("feedback-section").style.display = "block";
@@ -89,5 +96,5 @@ document.getElementById("restart-game").addEventListener("click", () => {
   generateClient();
 });
 
-// Inizia il gioco generando il primo cliente
+// Inizia il gioco
 generateClient();
