@@ -71,7 +71,56 @@ document.getElementById("add-exercise").addEventListener("click", () => {
   }
 });
 
-// Placeholder per valutazione
+// Funzione per la valutazione del piano di allenamento
+function evaluatePlan(exercises, client) {
+  let score = 0;
+
+  // Controlla se gli esercizi sono appropriati per l'obiettivo del cliente
+  if (client.goal === "Ipertrofia") {
+    if (exercises.some(exercise => exercise.includes("manubri"))) {
+      score += 20; // Aggiungi punti se ci sono esercizi con manubri
+    }
+  }
+
+  if (client.goal === "Dimagrimento") {
+    if (exercises.some(exercise => exercise.includes("cardio"))) {
+      score += 30; // Aggiungi punti per esercizi cardio
+    }
+  }
+
+  if (client.goal === "Aumento forza") {
+    if (exercises.some(exercise => exercise.includes("resistenza"))) {
+      score += 25; // Aggiungi punti per esercizi di resistenza
+    }
+  }
+
+  // Verifica i vincoli (ad esempio, se il cliente ha problemi fisici)
+  if (client.constraints.includes("problema alla spalla destra")) {
+    // Se l'esercizio contiene "spalla", togli punti
+    if (exercises.some(exercise => exercise.includes("spalla"))) {
+      score -= 10;
+    }
+  }
+
+  // Aggiungi logica per altre valutazioni
+
+  return score;
+}
+
+// Modifica il listener del pulsante di invio
 document.getElementById("submit-plan").addEventListener("click", () => {
-  alert("Sistema di valutazione in sviluppo!");
+  const exercises = [];
+  const exerciseList = document.getElementById("exercise-list");
+  const listItems = exerciseList.getElementsByTagName("li");
+
+  // Estrai gli esercizi dalla lista
+  for (let item of listItems) {
+    exercises.push(item.textContent);
+  }
+
+  // Valuta la scheda
+  const score = evaluatePlan(exercises, currentClient);
+
+  // Mostra il punteggio
+  alert(`Il punteggio della tua scheda è: ${score}`);
 });
